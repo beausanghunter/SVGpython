@@ -14,6 +14,9 @@ from svgpython.io import svg_to_pdf
 
 def make_svg(svg_path: Path) -> Path:
     dwg = svgwrite.Drawing(filename=str(svg_path), size=(400, 200))
+    # off-white background
+    dwg.add(dwg.rect(insert=(0, 0), size=('100%', '100%'), fill='#f8f7f2'))
+
     # three red filled circles
     dwg.add(dwg.circle(center=(80, 100), r=40, fill='red'))
     dwg.add(dwg.circle(center=(200, 100), r=40, fill='red'))
