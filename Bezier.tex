@@ -1,0 +1,288 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Bezier Curves}
+\author{Christopher Hunter}
+\date{8 November 2022}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+\section{Defintion}
+A Bezier Curve of degree $n$ is defined by $n+1$ control points $\bf P_0 ... P_n$ to be the function on $u \in [0,1]$ defined by
+\begin{equation}
+C(u) = \sum_{i=0}^n B_{n,i}(u){\bf P_i}
+\end{equation}
+where the coefficients are defined by
+\begin{equation}
+B_{n,i}(u)=\frac{n!}{i!(n-i)!}u^i(1-u)^{n-i}
+\end{equation}
+We note that $C(0) = \bf P_0$ and $C(1) = \bf P_n$.
+
+
+The k-th derivative at the start (end) of a Bezier curve depends only on the first (last) (k+1) control points. Two obvious special cases:
+\begin{description}
+\item[k=0] The Bezier curve starts at the first control point and stops at the last control point. (In general, it will not pass through any other control point.)
+\item[k=1] The vector tangent to the Bezier curve at the start (stop) is parallel to the line connecting the first two (last two) control points.
+\end{description}
+
+If an affine transformation is applied to a Bézier curve, the result can be constructed from the affine images of its control points. This is a nice property. When we want to apply a geometric or even affine transformation to a Bézier curve, this property states that we can apply the transformation to control points, which is quite easy, and once the transformed control points are obtained the transformed Bézier curve is the one defined by these new points. Therefore, we do not have to transform the curve.
+
+\section{Cubic Bezier Functions}
+A cubic Bezier function has two end points $\bf P_0$ and $\bf P_1$ and two internal control points $\bf P_1$ and $\bf P_2$.  If we calculate the derivative of $C(u)$,
+\begin{eqnarray}
+C'(u) & = & \sum_{i=0}^n B'_{n,i}(u){\bf P_i} \\
+B'_{n,i}(u) & = & \frac{n!}{i!(n-i)!}[iu^{i-1}(1-u)^{n-i} + u^{i}(n-i)(1-u)^{n-i-1}]
+\end{eqnarray}
+\begin{eqnarray}
+B_{3,0}(u) & = & (1-u)^{3} = 1 - 3u + 3u^2 - u^3 \\
+B_{3,1}(u) & = & 3 u(1-u)^2 = 3u - 6u^2 + 3u^3 \\
+B_{3,2}(u) & = & 3 u^2(1-u) =  3u^2 -3u^3 \\
+B_{3,3}(u) & = & u^3
+\end{eqnarray}
+\begin{eqnarray}
+B'_{3,0}(u) & = & (1-u)^{3} = 1 - 3u + 3u^2 - u^3 \\
+B'_{3,1}(u) & = & 3 u(1-u)^2 = 3u - 6u^2 + 3u^3 \\
+B'_{3,2}(u) & = & 3 u^2(1-u) =  3u^2 -3u^3 \\
+B'_{3,3}(u) & = & 3u^2
+\end{eqnarray}
+\begin{eqnarray}
+B''_{3,0}(u) & = & 6(1-u) \\
+B''_{3,1}(u) & = & -6u  \\
+B''_{3,2}(u) & = & 6 - 18u \\
+B''_{3,3}(u) & = & 6u
+\end{eqnarray}
+
+
+
+\begin{eqnarray}
+C(u) & = & B_{3,0}(u){\bf P_0} + B_{3,1}(u){\bf P_1} + B_{3,2}(u){\bf P_2} + B_{3,3}(u){\bf P_3} \\
+& = &(1-u)^3 {\bf P_0} + 3 u(1-u)^2 {\bf P_1} + 3 u^2(1-u)^1 {\bf P_2} + u^3 {\bf P_3} \\
+C'(u) & = &3(1-u)^2 {\bf P_0} + [3(1-u)^2+6 u(1-u) {\bf P_1} + 3 u^2(1-u)^1 {\bf P_2} + u^3 {\bf P_3}
+\end{eqnarray}
+
+
+
+\section{Affine Transformations}
+
+\subsection{Introduction}
+Consider a point ${\bf x} = (x, y)$. Affine transformations of $\bf x$ are all transforms that can be
+written
+\begin{equation}
+{\bf x'} = (ax + by + c, dx + ey + f)
+\end{equation}
+where a through f are scalars.
+
+For example, if $a = e = 1$, and $b =  d = 0$, then we have a pure translation
+\begin{equation}
+{\bf x'} = (x +  c, y + f)
+\end{equation}
+
+If $b= d = 0$ and $c= f = 0$ then we have a pure scale
+\begin{equation}
+{\bf x'} = (ax, ey)
+\end{equation}
+
+
+
+And, if $a = e = \cos \theta$, $b = -\sin \theta$, $d = \sin \theta$, and $c= f = 0$, then we
+have a pure rotation about the origin
+\begin{equation}
+{\bf x'} = (x \cos \theta -y \sin\theta, x \cos \theta +y \sin\theta)
+\end{equation}
+
+Finally if $a=e = 1$, and $c= f = 0$ we have the shear transforms
+\begin{equation}
+{\bf x'} = (x + by, dx + y)
+\end{equation}
+
+In summary, we have the four basic affine transformations:
+\begin{description}
+\item[Translate] moves a set of points a fixed distance in x and y,
+\item[Scale] scales a set of points up or down in the x and y directions,
+\item[Rotate] rotates a set of points about the origin,
+\item[Shear] offsets a set of points a distance proportional to their x and y coordinates.
+\end{description}
+Note that only shear and scale change the shape determined by a set of points.
+
+\subsection{Matrix Transformations}
+The affine transforms scale, rotate and shear are actually linear transforms and can be
+represented by a matrix multiplication of a point represented as a vector,
+\begin{equation}
+\begin{bmatrix}
+x' \\
+y'
+\end{bmatrix}
+= 
+\begin{bmatrix}
+ax + by  \\
+dx + ey
+\end{bmatrix}
+=
+\begin{bmatrix}
+a & b  \\
+d & e
+\end{bmatrix}
+\begin{bmatrix}
+x  \\
+y
+\end{bmatrix}
+\end{equation}
+or $x' = Mx$, where $M$ is the matrix.
+
+One very nice feature of the matrix representation is that we can use it to factor a complex
+transform into a set of simpler transforms. For example, suppose we want to scale an
+object up to a new size, shear the object to a new shape, and finally rotate the object. Let
+$S$ be the scale matrix, $H$ be the shear matrix and $R$ be the rotation matrix. Then
+\[
+x' = R(H(Sx))
+\]
+defines a sequence of three transforms: 1st-scale, 2nd-shear, 3rd-rotate. Because matrix multiplication is associative, we can remove the parentheses and multiply the three
+matrices together, giving a new matrix $M = RHS$. Now we can rewrite our transform
+\[
+x' = (RHS)x = Mx
+\]
+If we have to transform thousands of points on a complex model, it is clearly easier to
+do one matrix multiplication, rather than three, each time we want to transform a point.
+Thus, matrices are a very powerful way to encapsulate a complex transform and to store
+it in a compact and convenient form.
+In matrix form, we can catalog the linear transforms as
+\begin{eqnarray}
+Scale & = &  
+\begin{bmatrix}
+s_x & 0 \\
+0 & s_y
+\end{bmatrix}
+\\
+ Rotate & = & 
+\begin{bmatrix}
+\cos \theta & -\sin \theta \\
+\sin \theta &  \cos \theta
+\end{bmatrix} 
+\\
+Shear: & = & 
+\begin{bmatrix}
+1 & h_x \\
+h_y & 1
+\end{bmatrix}
+\end{eqnarray}
+where $s_x$ and $s_y$ scale the $x$ and $y$ coordinates of a point, $\theta$ is an angle of counterclockwise
+rotation around the origin, $h_x$ is a horizontal shear factor, and $h_y$ is a vertical shear factor.
+
+
+
+\subsection{HOMOGENEOUS COORDINATES}
+Since the matrix form is so handy for building up complex transforms from simpler ones,
+it would be very useful to be able to represent all of the affine transforms by matrices.
+The problem is that translation is not a linear transform. The way out of this dilemma is
+to turn the 2D problem into a 3D problem, but in homogeneous coordinates.
+We first take all of our points $x = (x, y)$, express them as 2D vectors "
+\[
+\begin{bmatrix}
+x \\
+y
+\end{bmatrix}
+\]
+and make these
+into 3D vectors with identical (thus the term homogeneous) 3rd coordinates set to 1:
+\[
+\begin{bmatrix}
+x \\
+y \\
+1
+\end{bmatrix}.
+\]
+By convention, we call this third coordinate the $w$ coordinate, to distinguish it from the
+usual 3D z coordinate. We also extend our 2D matrices to 3D homogeneous form by
+appending an extra row and column, giving
+\begin{eqnarray}
+Scale & = &  
+\begin{bmatrix}
+s_x & 0 & 0\\
+0 & s_y & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+\\
+ Rotate & = & 
+\begin{bmatrix}
+\cos \theta & -\sin \theta & 0 \\
+\sin \theta &  \cos \theta & 0 \\
+0 & 0 & 1
+\end{bmatrix} 
+\\
+Shear: & = & 
+\begin{bmatrix}
+1 & h_x & 0 \\
+h_y & 1 & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+\end{eqnarray}.
+Note what happens when we multiply our 3D homogeneous matrices by 3D homogeneous vectors:
+\begin{equation}
+\begin{bmatrix}
+a & b & 0 \\
+d & e & 0 \\
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+x \\
+y \\
+1
+\end{bmatrix}
+=
+\begin{bmatrix}
+ax + by \\
+dx + ey \\
+1
+\end{bmatrix}.
+\end{equation}
+This is the same result as in 2D, with the exception of the extra $w$ coordinate, which remains 1.
+All we have really done is to place all of our 2D
+points on the plane $w = 1$ in 3D space, and now
+we do all the operations on this plane. Really, the
+operations are still 2D operations.
+But, the magic happens when we place the translation parameters c and f in the matrix
+in the 3rd column:
+\begin{equation}
+\begin{bmatrix}
+a & b & c \\
+d & e & f \\
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+x \\
+y \\
+1
+\end{bmatrix}
+=
+\begin{bmatrix}
+ax + by +c\\
+dx + ey +f \\
+1
+\end{bmatrix}.
+\end{equation}
+We can now do translations as linear operations in homogeneous coordinates! So, we can
+add a final matrix to our catalog:
+\begin{eqnarray}
+Translate: & = & 
+\begin{bmatrix}
+1 & o & t_x \\
+0 & 1 & t_y \\
+0 & 0 & 1
+\end{bmatrix}
+\end{eqnarray}
+where $t_x$ is the translation in the $x$ direction and $t_y$ is the translation in the $y$ direction. The
+astute reader will see the trick behind the magic – 2D translation is now being expressed
+as a shear in 3D space.
+
+
+ 
+
+
+\end{document}  

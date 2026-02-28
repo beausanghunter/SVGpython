@@ -1,0 +1,4 @@
+svgwrite
+numpy
+matplotlib
+PyQt5

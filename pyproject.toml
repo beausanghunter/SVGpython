@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "svgpython"
+version = "0.1.0"
+description = "Utilities for generating SVG ovoids and bezier shapes"
+authors = [ { name = "Your Name" } ]
+readme = "README.md"
+license = { text = "MIT" }
+dependencies = [
+    "svgwrite",
+    "numpy",
+    "matplotlib",
+    "PyQt5"
+]
