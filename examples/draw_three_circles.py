@@ -18,28 +18,9 @@ def make_svg(svg_path: Path) -> Path:
     return svg_path
 
 
-def ascii_preview(png_path: Path, width: int = 80) -> None:
-    try:
-        from PIL import Image
-    except Exception:
-        print("Pillow not available — skipping ASCII preview")
-        return
-
-    img = Image.open(png_path).convert('L')
-    w, h = img.size
-    aspect = h / w
-    new_w = width
-    new_h = max(1, int(aspect * new_w * 0.5))
-    img = img.resize((new_w, new_h))
-    pixels = img.getdata()
-    chars = " .:-=+*#%@"
-    out = ""
-    for y in range(new_h):
-        row = ""
-        for x in range(new_w):
-            row += chars[pixels[y * new_w + x] * (len(chars) - 1) // 255]
-        out += row + "\n"
-    print(out)
+from PyQt5.QtSvg import QSvgWidget
+from PyQt5.QtWidgets import QApplication
+import sys
 
 
 def main() -> None:
@@ -57,14 +38,16 @@ def main() -> None:
     print(f"Converting to PDF: {pdf_path}")
     svg_to_pdf(svg_path, pdf_path)
 
-    # Try to produce a PNG for terminal preview using cairosvg
+    # Display the SVG graphically using PyQt5
     try:
-        import cairosvg
-        cairosvg.svg2png(url=str(svg_path), write_to=str(png_path))
-        print(f"Produced PNG preview: {png_path}")
-        ascii_preview(png_path)
+        app = QApplication(sys.argv)
+        svg_widget = QSvgWidget(str(svg_path))
+        svg_widget.setWindowTitle('Three Red Circles')
+        svg_widget.resize(600, 300)
+        svg_widget.show()
+        app.exec_()
     except Exception as e:
-        print("Could not produce PNG preview:", e)
+        print('Could not display SVG (PyQt5 may not be available or running headless):', e)
 
     print("Done. Files:")
     print(" - SVG:", svg_path)
