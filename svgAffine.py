@@ -7,7 +7,7 @@ Created on Sat Oct 15 00:02:41 2022
 """
 
 import svgwrite
-import bezier
+from svgpython import bezier
 import numpy as np
 
 filename = 'svgAffine.svg'

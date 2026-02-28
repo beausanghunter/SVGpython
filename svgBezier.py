@@ -7,7 +7,7 @@ Created on Thu Sep 29 22:48:39 2022
 """
 
 import svgwrite
-import bezier
+from svgpython import bezier
 
 filename = 'svgBezier.svg'
 dwg = svgwrite.Drawing(filename)

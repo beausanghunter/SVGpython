@@ -11,8 +11,8 @@ from PyQt5.QtSvg import QSvgWidget
 from PyQt5.QtWidgets import QApplication#, QWidget
 
 import svgwrite
-import ovoid
-import ovoidDefinitions
+from svgpython import ovoid
+from svgpython import ovoidDefinitions
 
 
 filename = 'svgwrite-example6.svg'

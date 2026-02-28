@@ -7,9 +7,9 @@ Created on Tue Sep 27 22:48:52 2022
 """
 
 import svgwrite
-import bezier
-import ovoidDefinitions
-import ovoid
+from svgpython import bezier
+from svgpython import ovoidDefinitions
+from svgpython import ovoid
 
 filename = 'svgEyelid.svg'
 dwg = svgwrite.Drawing(filename)
