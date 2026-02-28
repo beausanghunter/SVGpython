@@ -12,10 +12,8 @@ def svg_to_pdf(svg_path: str | Path, pdf_path: Optional[str | Path] = None) -> P
     Returns:
         Path to the created PDF file.
     """
-    try:
-        import cairosvg
-    except Exception as e:
-        raise RuntimeError("cairosvg is required for svg_to_pdf — install via pip: cairosvg") from e
+    import shutil
+    import subprocess
 
     svg_p = Path(svg_path)
     if pdf_path is None:
@@ -23,5 +21,37 @@ def svg_to_pdf(svg_path: str | Path, pdf_path: Optional[str | Path] = None) -> P
     else:
         pdf_p = Path(pdf_path)
 
-    cairosvg.svg2pdf(url=str(svg_p), write_to=str(pdf_p))
-    return pdf_p
+    # Primary: try CairoSVG (pure-Python wrapper, but requires native cairo)
+    try:
+        import cairosvg  # type: ignore
+        cairosvg.svg2pdf(url=str(svg_p), write_to=str(pdf_p))
+        return pdf_p
+    except Exception:
+        # Fall through to external tools
+        pass
+
+    # Fallback 1: librsvg's rsvg-convert
+    rsvg = shutil.which('rsvg-convert')
+    if rsvg:
+        cmd = [rsvg, '-f', 'pdf', '-o', str(pdf_p), str(svg_p)]
+        subprocess.run(cmd, check=True)
+        return pdf_p
+
+    # Fallback 2: inkscape CLI (newer inkscape uses --export-type)
+    inkscape = shutil.which('inkscape')
+    if inkscape:
+        # Try new CLI style first
+        cmd = [inkscape, str(svg_p), '--export-type=pdf', f'--export-filename={str(pdf_p)}']
+        res = subprocess.run(cmd)
+        if res.returncode == 0:
+            return pdf_p
+        # Try legacy inkscape CLI
+        cmd = [inkscape, '-o', str(pdf_p), str(svg_p)]
+        subprocess.run(cmd, check=True)
+        return pdf_p
+
+    raise RuntimeError(
+        "Could not convert SVG to PDF: CairoSVG failed and neither 'rsvg-convert' nor 'inkscape' were found."
+        " Install cairo via Homebrew (`brew install cairo pango librsvg`) or install Inkscape,"
+        " then retry."
+    )
