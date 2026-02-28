@@ -2,3 +2,4 @@ svgwrite
 numpy
 matplotlib
 PyQt5
+cairosvg
