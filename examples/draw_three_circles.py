@@ -13,9 +13,11 @@ from svgpython.io import svg_to_pdf
 
 
 def make_svg(svg_path: Path) -> Path:
-    dwg = svgwrite.Drawing(filename=str(svg_path), size=(400, 200))
-    # off-white background
-    dwg.add(dwg.rect(insert=(0, 0), size=('100%', '100%'), fill='#f8f7f2'))
+    width = 400
+    height = 200
+    dwg = svgwrite.Drawing(filename=str(svg_path), size=(f"{width}px", f"{height}px"), viewBox=f"0 0 {width} {height}")
+    # off-white background (use absolute size so it fills the whole canvas)
+    dwg.add(dwg.rect(insert=(0, 0), size=(width, height), fill='#f8f7f2'))
 
     # three red filled circles
     dwg.add(dwg.circle(center=(80, 100), r=40, fill='red'))
