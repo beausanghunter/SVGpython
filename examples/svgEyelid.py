@@ -7,6 +7,10 @@ Created on Tue Sep 27 22:48:52 2022
 """
 
 import svgwrite
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from svgpython import bezier
 from svgpython import ovoidDefinitions
 from svgpython import ovoid

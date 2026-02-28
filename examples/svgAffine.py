@@ -7,6 +7,10 @@ Created on Sat Oct 15 00:02:41 2022
 """
 
 import svgwrite
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from svgpython import bezier
 import numpy as np
 

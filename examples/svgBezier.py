@@ -7,6 +7,10 @@ Created on Thu Sep 29 22:48:39 2022
 """
 
 import svgwrite
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from svgpython import bezier
 
 filename = 'svgs/svgBezier.svg'

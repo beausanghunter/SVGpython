@@ -5,6 +5,10 @@ from __future__ import annotations
 from pathlib import Path
 import svgwrite
 
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from svgpython.io import svg_to_pdf
 
 
