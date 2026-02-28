@@ -9,7 +9,7 @@ Created on Thu Sep 29 22:48:39 2022
 import svgwrite
 from svgpython import bezier
 
-filename = 'svgBezier.svg'
+filename = 'svgs/svgBezier.svg'
 dwg = svgwrite.Drawing(filename)
 
 start = (100,100)

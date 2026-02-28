@@ -14,7 +14,7 @@ from svgpython import ovoid
 
 
 
-filename = 'svgwrite-example.svg'
+filename = 'svgs/svgwrite-example.svg'
 dwg = svgwrite.Drawing(filename)#, size=('100%', '100%'), profile='full')
 # draw a red box
 #dwg.add(dwg.rect( (10, 10), (30, 20),

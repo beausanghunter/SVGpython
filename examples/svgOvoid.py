@@ -15,7 +15,7 @@ from svgpython import ovoid
 from svgpython import ovoidDefinitions
 
 
-filename = 'svgwrite-example6.svg'
+filename = 'svgs/svgwrite-example6.svg'
 dwg = svgwrite.Drawing(filename)
         
 # set the variables for the ovoid

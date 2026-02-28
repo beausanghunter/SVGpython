@@ -11,7 +11,7 @@ from svgpython import bezier
 from svgpython import ovoidDefinitions
 from svgpython import ovoid
 
-filename = 'svgEyelid.svg'
+filename = 'svgs/svgEyelid.svg'
 dwg = svgwrite.Drawing(filename)
 
 color = 'grey'

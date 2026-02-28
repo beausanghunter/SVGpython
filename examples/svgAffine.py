@@ -10,7 +10,7 @@ import svgwrite
 from svgpython import bezier
 import numpy as np
 
-filename = 'svgAffine.svg'
+filename = 'svgs/svgAffine.svg'
 dwg = svgwrite.Drawing(filename)
 
 

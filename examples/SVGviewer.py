@@ -10,7 +10,7 @@ class MainWindow(QWidget):
 
  #       self.widgetSvg = QSvgWidget(parent=self)
   #      self.widgetSvg.setGeometry(10, 10, 1080, 1080)
-        svgWidget = QSvgWidget('svgwrite-example3.svg')
+        svgWidget = QSvgWidget('svgs/svgwrite-example3.svg')
         svgWidget.setGeometry(50,50,759,668)
 
 
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         app.exec()
     else:
         app = QApplication(sys.argv) 
-        svgWidget = QSvgWidget('svgwrite-example3.svg')
+        svgWidget = QSvgWidget('svgs/svgwrite-example3.svg')
         svgWidget.setGeometry(0,0,1000,1000)
         svgWidget.show()       
         sys.exit(app.exec_())        
